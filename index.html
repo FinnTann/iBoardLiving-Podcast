@@ -1,49 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>iBoardLiving Podcast Recorder</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>iBoardLiving Podcast Studio</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #F5F5F5;
-      padding: 40px;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://images.unsplash.com/photo-1607970382894-714ec9997a9f?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+    }
+
+    .overlay {
+      background-color: rgba(76, 42, 133, 0.85);
+      min-height: 100vh;
+      padding: 60px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
     }
+
     h1 {
-      color: #4C2A85;
+      color: #FFC727;
+      margin-bottom: 20px;
     }
+
     input {
       margin: 10px;
-      padding: 8px;
-      width: 200px;
-    }
-    button {
-      background-color: #FFC727;
+      padding: 10px;
+      width: 250px;
       border: none;
-      padding: 10px 20px;
+      border-radius: 5px;
+    }
+
+    .btn {
+      background-color: #FFC727;
+      color: #000;
+      border: none;
+      padding: 12px 25px;
       font-weight: bold;
       cursor: pointer;
+      border-radius: 6px;
       margin: 10px;
     }
+
     audio {
-      margin-top: 20px;
+      margin-top: 30px;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    #downloadLink {
+      display: none;
+      margin-top: 15px;
+      color: #FFC727;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .footer {
+      margin-top: 60px;
+      font-size: 14px;
+      color: #ccc;
     }
   </style>
 </head>
 <body>
+  <div class="overlay">
+    <h1>🎙️ iBoardLiving Podcast Studio</h1>
+    <p>Host your own podcast. Record interviews with your OFW guests and download it instantly!</p>
 
-  <h1>🎙️ iBoardLiving Podcast Recorder</h1>
-  <p>Enter participants:</p>
-  <input type="text" placeholder="Host Name" id="host">
-  <input type="text" placeholder="Guest 1" id="guest1">
-  <input type="text" placeholder="Guest 2" id="guest2"><br>
+    <input type="text" placeholder="🎧 Host Name" id="host" />
+    <input type="text" placeholder="🎤 Guest 1" id="guest1" />
+    <input type="text" placeholder="🎤 Guest 2" id="guest2" />
 
-  <button id="start">Start Recording</button>
-  <button id="stop" disabled>Stop Recording</button>
+    <div>
+      <button id="start" class="btn">Start Recording</button>
+      <button id="stop" class="btn" disabled>Stop Recording</button>
+    </div>
 
-  <audio id="audio" controls></audio>
-  <a id="downloadLink" style="display:none;" download="podcast_recording.wav">Download Recording</a>
+    <audio id="audio" controls></audio>
+    <a id="downloadLink" download="iBoardPodcast.wav">⬇️ Download Your Podcast</a>
+
+    <div class="footer">Powered by iBoardLiving | Empowering Voices, Anywhere 🏠</div>
+  </div>
 
   <script>
     let mediaRecorder;
@@ -53,8 +96,8 @@
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.start();
-
       audioChunks = [];
+
       mediaRecorder.ondataavailable = event => {
         audioChunks.push(event.data);
       };
@@ -62,12 +105,11 @@
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
         const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = document.getElementById('audio');
-        audio.src = audioUrl;
+        document.getElementById('audio').src = audioUrl;
 
-        const downloadLink = document.getElementById('downloadLink');
-        downloadLink.href = audioUrl;
-        downloadLink.style.display = 'inline';
+        const link = document.getElementById('downloadLink');
+        link.href = audioUrl;
+        link.style.display = 'inline-block';
       };
 
       document.getElementById('start').disabled = true;
@@ -80,6 +122,5 @@
       document.getElementById('stop').disabled = true;
     };
   </script>
-
 </body>
 </html>
